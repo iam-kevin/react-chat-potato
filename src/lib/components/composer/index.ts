@@ -1,2 +1,4 @@
-export * from './ImageComposer'
-export * from './TextComposer'
+import ImageComposer from './ImageComposer'
+import TextComposer from './TextComposer'
+
+export { ImageComposer, TextComposer }

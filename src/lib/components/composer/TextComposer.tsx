@@ -1,6 +1,6 @@
 import React from 'react'
 
-export function TextComposer () {
+export default function TextComposer () {
     return (
         <div>
             <textarea />
