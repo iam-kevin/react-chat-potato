@@ -3,7 +3,9 @@ import { Provider } from 'jotai'
 
 
 export default function Potato () {
-    <Provider>
-        
-    </Provider>
+    return(
+        <Provider>
+            
+        </Provider>
+    )
 }
