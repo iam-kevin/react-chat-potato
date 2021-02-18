@@ -1,5 +1,11 @@
 // Types in the application
 
+
+export interface PotatoProps {
+    initialMessages: Messages,
+    children: any
+}
+
 /**
  * Information that is to the entire 
  * chat across a potato instance
@@ -31,6 +37,26 @@ export declare namespace Potato {
     interface User {
         name: string,
         avatar: string
+    }
+
+
+    /**
+     * Context for the messages
+     */
+    interface MessageContext {
+        messages: Messages
+    }
+
+    /**
+     * Load the messages:
+     * { [messageId: number]: messageBody }
+     */
+    type Messages = Array<MessageBody>
+
+    interface MessageBody {
+        text: string,
+        dateTimeDelta: number,
+        user: keyof GlobalContext['users']
     }
 }
 
