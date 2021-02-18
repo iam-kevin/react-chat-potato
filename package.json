@@ -1,6 +1,6 @@
 {
   "name": "react-chat-potato",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/index.js",
   "repository": "https://github.com/iam-kevin/react-chat-potato.git",
   "author": "iam-kevin <kevin.al.james@gmail.com>",
