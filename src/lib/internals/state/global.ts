@@ -4,9 +4,9 @@
  */
 
 import { atom } from 'jotai'
-import { GlobalContext } from '../../../../@types/index'
+import { Potato } from '../../../../@types/index'
 
-const globalContextAtom = atom<GlobalContext | undefined>(undefined)
+const globalContextAtom = atom<Potato.GlobalContext | undefined>(undefined)
 
 // Gets the users involved in the chat
 export const users = atom(get => get(globalContextAtom)?.users)
