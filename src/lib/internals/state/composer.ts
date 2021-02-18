@@ -1,5 +1,5 @@
 import { Atom, atom } from 'jotai'
-import { TextComposer, ImageComposer } from '../../components/composer'
+import { TextComposer, ImageComposer, ComposerComponentProps } from '../../components/composer'
 
 /**
  * These are the form of inputs that are 
@@ -9,6 +9,7 @@ type ComposerType = 'text' | 'image'
 
 interface GlobalComposerContext {
     composerType: ComposerType,
+    sendAction: () => any
 }
 
 // @ts-ignore
@@ -22,7 +23,7 @@ const globalComposerContext = atom<GlobalComposerContext>({
  * Composer Component details
  */
 interface Composer {
-    component: () => JSX.Element
+    component: (sendAction: ComposerComponentProps) => JSX.Element
 }
 
 type ComposerMap = { [type in ComposerType]: Atom<Composer> }
