@@ -6,7 +6,9 @@
   "author": "iam-kevin <kevin.al.james@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "tsc": ""
+    "css": "npx tailwindcss build ./src/css/index.css -o ./dist/css/index.css",
+    "tsc": "tsc -p .",
+    "prepublish": "tsc"
   },
   "devDependencies": {
     "@types/node": "^14.14.28",
@@ -14,7 +16,10 @@
     "typescript": "^4.1.5"
   },
   "dependencies": {
+    "autoprefixer": "^10.2.4",
+    "postcss": "^8.2.6",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "tailwindcss": "^2.0.3"
   }
 }
