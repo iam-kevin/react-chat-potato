@@ -8,7 +8,8 @@
   "scripts": {
     "css": "npx tailwindcss build ./src/css/index.css -o ./dist/css/index.css",
     "tsc": "tsc -p .",
-    "prepublish": "tsc"
+    "build": "yarn run css && yarn run tsc",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
     "@types/node": "^14.14.28",
