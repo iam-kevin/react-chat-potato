@@ -13,7 +13,7 @@ interface GlobalComposerContext {
 }
 
 // @ts-ignore
-const globalComposerContext = atom<GlobalComposerContext>({
+export const globalComposerContext = atom<GlobalComposerContext>({
     composerType: 'text',    // default composer 'text' | options 'text', 'image',
     sendAction: () => console.log('Message has bee sent')
 })
@@ -42,3 +42,5 @@ const composerMap: ComposerMap = {
  * @param composerType Composer type
  */
 export const getComposerInfo = (composerType: ComposerType) => composerMap[composerType]
+export const currentComposer = atom(get => get(globalComposerContext).composerType)
+export const composerAction = atom(get => get(globalComposerContext).sendAction)
