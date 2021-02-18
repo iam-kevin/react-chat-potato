@@ -1,15 +1,9 @@
 import React from 'react'
+import { Provider } from 'jotai'
 
-function Component () {
-    return (
-        <div>
-            Something is here
-        </div>
-    )
+
+export default function Potato () {
+    <Provider>
+        
+    </Provider>
 }
-
-export default () => (
-    <React.StrictMode>
-        <Component />
-    </React.StrictMode>
-)
