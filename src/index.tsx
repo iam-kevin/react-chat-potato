@@ -1,10 +1,25 @@
 import React from 'react'
-import { Provider } from 'jotai'
-import { PotatoProps } from '../@types/index'
+import { Provider, useAtom } from 'jotai'
+import { PotatoProviderProps, PotatoChatProps } from '../@types/index'
 
-export * from './lib'
+import { rMessageIds } from './lib'
+import { BaseMessage } from './lib/components/frame'
 
-export default function Potato ({ initialMessages, children }: PotatoProps) {
+
+export function PotatoChat({ initialMessages }: PotatoChatProps) {
+    const [messages] = useAtom(rMessageIds)
+    return (
+        <div>
+            {
+                messages.map((messageId) => (
+                    <BaseMessage messageId={messageId} /> 
+                ))                 
+            }
+        </div>
+    )
+}
+
+export function PotatoProvider ({ children }: PotatoProviderProps) {
     return(
         <Provider>
             {children}

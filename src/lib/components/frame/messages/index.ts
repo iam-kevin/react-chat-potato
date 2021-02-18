@@ -1,1 +1,3 @@
-export * from './Message'
+import BaseMessage from './BaseMessage'
+
+export { BaseMessage }

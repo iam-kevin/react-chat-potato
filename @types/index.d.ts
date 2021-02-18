@@ -1,9 +1,12 @@
 // Types in the application
 
 
-export interface PotatoProps {
-    initialMessages: Messages,
+export interface PotatoProviderProps {
     children: any
+}
+
+export interface PotatoChatProps {
+    initialMessages: Messages,
 }
 
 /**
@@ -51,7 +54,7 @@ export declare namespace Potato {
      * Load the messages:
      * { [messageId: number]: messageBody }
      */
-    type Messages = Array<MessageBody>
+    type Messages = { [messageId: number]: MessageBody }
 
     interface MessageBody {
         text: string,
