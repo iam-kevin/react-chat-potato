@@ -1,19 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Provider, useAtom } from 'jotai'
 import { PotatoProviderProps, PotatoChatProps } from '../@types/index'
 
-import { rMessageIds, currentComposer, getComposerInfo, composerAction } from './lib/internals/state'
+import { messagesAtom, ComposerType } from './lib/internals/state'
 import { BaseMessage } from './lib/components/frame'
+import { useComposerComponent } from './lib/utils'
+
 
 function PotatoChatComposer() {
-    const [composerType] = useAtom(currentComposer)
-    const [composer] = useAtom(getComposerInfo(composerType))
-    const [composerSendAction] = useAtom(composerAction)
+    const [compType, setCompType] = useState<ComposerType>('text')
+    const ComposerComponent = useComposerComponent(compType)
+    // const onChange = useCallback(() => {} )
 
-    // to render component
-    const ComposerComponent = composer.component
     return (
-        <ComposerComponent sendAction={composerSendAction}/>
+        <div>
+            <ComposerComponent />
+            <div>
+                <label>Composer Option:</label>
+                <select name="composer-option" onChange={(e) => {
+                    console.log("Change the value to:", e.target.value)
+
+                    // @ts-ignore
+                    setCompType(e.target.value)
+                }}>
+                    <option value="text">Text</option>
+                    <option value="image">Image</option>
+                </select>
+            </div>
+        </div>
     )
 }
 
@@ -22,13 +36,17 @@ function PotatoChatComposer() {
  * Entire housed chat UI
  */
 export function PotatoChat({ initialMessages }: PotatoChatProps) {
-    const [messages] = useAtom(rMessageIds)
+    const [messages] = useAtom(messagesAtom)
     
     return (
         <div>
             {
-                messages.map((messageId) => (
-                    <BaseMessage messageId={messageId} /> 
+                Object.keys(messages).map((messageId) => (
+                    // Message section
+                    <div className="" key={`message-id-${messageId}`}>
+                        {/* actual message bubble */}
+                        <BaseMessage messageId={messageId} /> 
+                    </div>
                 ))                 
             }
             <PotatoChatComposer />

@@ -9,15 +9,19 @@
     "css": "npx tailwindcss build ./src/css/index.css -o ./dist/css/index.css",
     "tsc": "tsc -p .",
     "build": "yarn run css && yarn run tsc",
-    "prepublish": "yarn build"
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "@types/node": "^14.14.28",
     "@types/react": "^17.0.2",
     "autoprefixer": "^10.2.4",
+    "babel-cli": "6",
+    "babel-preset-react-app": "3",
+    "nodemon": "^2.0.7",
     "postcss": "^8.2.6",
     "tailwindcss": "^2.0.3",
-    "typescript": "^4.1.5"
+    "typescript": "^4.1.5",
+    "web-vitals": "^1.1.0"
   },
   "dependencies": {
     "jotai": "^0.14.1",

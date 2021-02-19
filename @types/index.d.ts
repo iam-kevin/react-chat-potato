@@ -15,7 +15,7 @@ export interface PotatoChatProps {
  */
 export declare namespace Potato {
     export interface GlobalContext {
-        datetime: Date,
+        dateTime: Date | number,
     
         /**
          * Users who are participating in the chat
@@ -39,7 +39,7 @@ export declare namespace Potato {
      */
     interface User {
         name: string,
-        avatar: string
+        avatar?: string
     }
 
 
@@ -54,12 +54,21 @@ export declare namespace Potato {
      * Load the messages:
      * { [messageId: number]: messageBody }
      */
-    type Messages = { [messageId: number]: MessageBody }
+    type Messages = { [messageId: string]: MessageBody }
 
-    interface MessageBody {
-        text: string,
+    interface MessageBody<MessageInputType> {
+        input: MessageInputType,
         dateTimeDelta: number,
         user: keyof GlobalContext['users']
     }
+
+    namespace Composer {
+        interface NewMessage<T> {
+            input: T,
+            user: 'self' | string,
+            messageId?: string | number
+        }
+    }
+
 }
 

@@ -6,10 +6,19 @@
 import { atom } from 'jotai'
 import { Potato } from '../../../../@types/index'
 
-const globalContextAtom = atom<Potato.GlobalContext | undefined>(undefined)
+
+const globalContextAtom = atom<Potato.GlobalContext>({
+    dateTime: Date.now(),
+    users: {
+        'kevin': {
+            name: "Kevin James",
+        }
+    }
+} as Potato.GlobalContext)
+
 
 // Gets the users involved in the chat
-export const users = atom(get => get(globalContextAtom)?.users)
+export const rUsers = atom(get => get(globalContextAtom)?.users)
 
 /**
  * Gets the user by their initialized user id
@@ -17,4 +26,5 @@ export const users = atom(get => get(globalContextAtom)?.users)
  */
 export const getUser = (userId: string) => atom(get => get(globalContextAtom)?.users[userId])
 
+export const rChatDateTime = atom(get => get(globalContextAtom).dateTime)
 
