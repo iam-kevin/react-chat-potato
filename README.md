@@ -5,6 +5,7 @@ A fun project, that tries to take a different approach from community loved [rea
 Only dependecies (hopefully) are:
   - [react@17.0.1](https://github.com/facebook/react)
   - [jotai@0.14.1](https://github.com/pmndrs/jotai)
+  - [immer@8.0.1](https://github.com/immerjs/immer)
 
 ## Usage
 
