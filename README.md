@@ -10,24 +10,29 @@ Only dependecies (hopefully) are:
 
 ```tsx
 import { PotatoProvider, PotatoChat } from 'react-chat-potato'
+import { ComposerMessageInputType } from 'react-chat-potato/lib';
 
-export default function App () {
-    // message are loaded somewhere
-    const messages = [...]
-
-    return (
-        <PotatoProvider initialMessages={[]}>
-            <PotatoChat 
-                defaultComposer='text'
-                sendAction={(newInput) => {
-                    console.log("You have sent a new message")
-                    console.log(newInput.input)
-                }} />
-        </PotatoProvider>
-    )
+function App() {
+  const sendCallback = async (message: ComposerMessageInputType) => {
+    console.log("Sent the message")
+  }
+  return (
+    <div className="App">
+      <PotatoProvider initialMessages={[]}>
+        <PotatoChat
+          initialComposer='text'
+          sendCallback={sendCallback}/>
+      </PotatoProvider>
+    </div>
+  );
 }
+
+export default App;
+
 ```
 
 ## License
 
-This project uses an [MIT License](LICENSE). So take it apart, build it. Do whatever you want with this project
+This project uses an [MIT License](LICENSE). So take it apart, build it. Do whatever you want with this project.
+
+But Contributions are welcomed
