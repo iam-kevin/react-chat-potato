@@ -7,15 +7,15 @@ import { ComposerMessageInputType } from './composer'
 
 export const messagesAtom = atom<Potato.Messages>([
     { 
-        text: "Hi here, how are you doing", 
+        input: "Hi here, how are you doing", 
         dateTimeDelta: 129122762,
         user: 'kevin'
-    },
+    } as Potato.MessageBody<string>,
     { 
-        text: "Sent this message on Wednesday", 
+        input: "Sent this message on Wednesday", 
         dateTimeDelta: 215617315,
         user: 'kevin'
-    }
+    } as Potato.MessageBody<string>
 ])
 
 /**
@@ -34,17 +34,16 @@ export const updateMessages = atom(
     null,
     (get, set, { input, user, messageId }: Potato.Composer.NewMessage<ComposerMessageInputType>) => {
         const messages = get(messagesAtom)
-        const messageDate = get(rChatDateTime)
+        const originDate = get(rChatDateTime)
 
         const _new = produce(messages, draft => {
             draft.push({
                 input,
-                dateTimeDelta: Date.now() - (new Date(messageDate)).getTime(),
+                dateTimeDelta: Date.now() - (new Date(originDate)).getTime(),
                 user
             } as Potato.MessageBody<ComposerMessageInputType>)
         })
 
-        console.log("New message:", _new)
         set(messagesAtom, _new)
     }
 )

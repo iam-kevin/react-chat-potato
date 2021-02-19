@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Provider, useAtom } from 'jotai'
 import { PotatoProviderProps, PotatoChatProps } from '../@types/index'
 
-import { messagesAtom, ComposerType } from './lib/internals/state'
+import { ComposerType, rMessageIds } from './lib/internals/state'
 import { BaseMessage } from './lib/components/frame'
 import { useComposerComponent } from './lib/utils'
 
@@ -31,17 +31,14 @@ function PotatoChatComposer() {
     )
 }
 
+function MessagesCanvas () {
+    const [keys] = useAtom(rMessageIds)
+    console.log("message ids:", keys)
 
-/**
- * Entire housed chat UI
- */
-export function PotatoChat({ initialMessages }: PotatoChatProps) {
-    const [messages] = useAtom(messagesAtom)
-    
     return (
-        <div>
+        <>
             {
-                Object.keys(messages).map((messageId) => (
+                keys.map((messageId) => (
                     // Message section
                     <div className="" key={`message-id-${messageId}`}>
                         {/* actual message bubble */}
@@ -49,6 +46,20 @@ export function PotatoChat({ initialMessages }: PotatoChatProps) {
                     </div>
                 ))                 
             }
+        </>
+    )
+}
+
+
+/**
+ * Entire housed chat UI
+ */
+export function PotatoChat({ initialMessages }: PotatoChatProps) {    
+    return (
+        <div>
+            <div>
+                <MessagesCanvas />
+            </div>
             <PotatoChatComposer />
         </div>
     )
