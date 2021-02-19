@@ -1,12 +1,12 @@
 import React from 'react'
-// import { ComposerComponentProps } from './index'
+import { ComposerComponentProps } from './index'
 
 /**
  * Properties for the Text composer
  */
 // interface ImageComposerProps extends ComposerComponentProps<string> {}
 
-export default function ImageComposer() {
+export default function ImageComposer(props: ComposerComponentProps<string> ) {
     return (
         <div>
             <input type="file" />

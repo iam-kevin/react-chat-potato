@@ -1,28 +1,31 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Provider, useAtom } from 'jotai'
-import { PotatoProviderProps, PotatoChatProps } from '../@types/index'
+import { Potato } from '../@types/index'
 
-import { ComposerType, rMessageIds } from './lib/internals/state'
+import { ComposerMessageInputType, ComposerType, rMessageIds } from './lib/internals/state'
 import { BaseMessage } from './lib/components/frame'
 import { useComposerComponent } from './lib/utils'
+import { ComposerComponentProps } from './lib'
 
+interface PotatoChatComposerProps {
+    initialComposer: ComposerType
+    sendCallback: ComposerComponentProps<ComposerMessageInputType>['sendCallback']
+}
 
-function PotatoChatComposer() {
-    const [compType, setCompType] = useState<ComposerType>('text')
-    const ComposerComponent = useComposerComponent(compType)
-    // const onChange = useCallback(() => {} )
+function PotatoChatComposer({ initialComposer, sendCallback }: PotatoChatComposerProps) {
+    const [compType, setCompType] = useState<ComposerType>(initialComposer)
+    const ComposerComponent = useComposerComponent<ComposerType>(compType)
+
+    // callback for adding switching btn types
+    const onChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => setCompType(e.target.value as ComposerType), [])
+
 
     return (
         <div>
-            <ComposerComponent />
+            <ComposerComponent sendCallback={sendCallback} />
             <div>
                 <label>Composer Option:</label>
-                <select name="composer-option" onChange={(e) => {
-                    console.log("Change the value to:", e.target.value)
-
-                    // @ts-ignore
-                    setCompType(e.target.value)
-                }}>
+                <select name="composer-option" onChange={onChange} value={compType}>
                     <option value="text">Text</option>
                     <option value="image">Image</option>
                 </select>
@@ -31,10 +34,10 @@ function PotatoChatComposer() {
     )
 }
 
-function MessagesCanvas () {
+interface MessageCanvas {}
+function MessagesCanvas (props: MessageCanvas) {
     const [keys] = useAtom(rMessageIds)
-    console.log("message ids:", keys)
-
+    
     return (
         <>
             {
@@ -51,20 +54,30 @@ function MessagesCanvas () {
 }
 
 
+
+interface PotatoChatProps extends PotatoChatComposerProps {}
+
 /**
  * Entire housed chat UI
  */
-export function PotatoChat({ initialMessages }: PotatoChatProps) {    
+export function PotatoChat({ initialComposer, sendCallback }: PotatoChatProps) {    
     return (
         <div>
             <div>
                 <MessagesCanvas />
             </div>
-            <PotatoChatComposer />
+            <PotatoChatComposer
+                sendCallback={sendCallback}
+                initialComposer={initialComposer} />
         </div>
     )
 }
 
+
+export interface PotatoProviderProps {
+    initialMessages?: Potato.Messages,
+    children: any
+}
 /**
  * Provider to provide the chat ui with state to manage
  * chat context

@@ -14,7 +14,7 @@ export const messagesAtom = atom<Potato.Messages>([
     { 
         input: "Sent this message on Wednesday", 
         dateTimeDelta: 215617315,
-        user: 'kevin'
+        user: 'brian'
     } as Potato.MessageBody<string>
 ])
 

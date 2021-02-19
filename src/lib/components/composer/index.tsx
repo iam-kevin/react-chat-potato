@@ -1,9 +1,8 @@
-// import { Potato } from '../../../../@types'
 import ImageComposer from './ImageComposer'
 import TextComposer from './TextComposer'
 
 export interface ComposerComponentProps<T> {
-    sendAction: (message: T) => Promise<void>
+    sendCallback: (message: T) => Promise<void>
 }
 
 interface BaseComposerComponentProps {

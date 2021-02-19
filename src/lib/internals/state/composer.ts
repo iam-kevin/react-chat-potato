@@ -1,6 +1,6 @@
 import { Atom, atom } from 'jotai'
 import { Potato } from '../../../../@types'
-import { TextComposer, ImageComposer } from '../../components/composer'
+import { TextComposer, ImageComposer, ComposerComponentProps } from '../../components/composer'
 
 import { updateMessages } from './messages'
 
@@ -15,7 +15,7 @@ export type ComposerType =
 export type ComposerMessageInputType = 
     | string 
     | string
-
+    | number
 interface GlobalComposerContext {
     composerType: ComposerType,
     sendAction: <T> (input: Potato.Composer.NewMessage<T>) => Promise<void>
@@ -46,18 +46,18 @@ export const composerUpdateAction = atom(null,
 /**
  * Composer Component details
  */
-interface Composer {
-    component: () => JSX.Element
+interface Composer<T> {
+    component: (props: ComposerComponentProps<T>) => JSX.Element
 }
 
-type ComposerMap = { [type in ComposerType]: Atom<Composer> }
+type ComposerMap = { [type in ComposerType]: Atom<Composer<ComposerMessageInputType>> }
 
 // You might want to move this to the BaseComposer
 const composerMap: ComposerMap = {
-    'text': atom<Composer>({ 
+    'text': atom<Composer<string>>({ 
         component: TextComposer,
     }),
-    'image': atom<Composer>({ 
+    'image': atom<Composer<string>>({ 
         component: ImageComposer,
     }),
 }

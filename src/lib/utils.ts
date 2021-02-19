@@ -1,4 +1,5 @@
 import { useAtom } from "jotai"
+import { ComposerComponentProps } from "./components"
 import { currentComposer, getComposerInfo } from "./internals"
 import { ComposerType } from './internals/state/composer'
 
@@ -25,7 +26,7 @@ export function useComposer(composerType: ComposerType | undefined = undefined) 
  * Gets the component for rendering the composer
  * @param composerType 
  */
-export function useComposerComponent (composerType: ComposerType | undefined = undefined) {
+export function useComposerComponent<T>(composerType: ComposerType | undefined = undefined) {
     const composer = useComposer(composerType)
 
     // for renditions
