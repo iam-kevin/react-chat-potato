@@ -1,3 +1,4 @@
+import React from 'react'
 import ImageComposer from './ImageComposer'
 import TextComposer from './TextComposer'
 
