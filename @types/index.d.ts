@@ -9,21 +9,29 @@ export interface PotatoChatProps {
     initialMessages: Messages,
 }
 
+
 /**
  * Information that is to the entire 
  * chat across a potato instance
  */
 export declare namespace Potato {
-    export interface GlobalChatContext {
+    /**
+     * Valide Composer Types
+     */
+    type ValidComposerTypes = string
+
+    interface GlobalChatContext<TUser> {
         dateTime: Date | number,
     
         /**
          * Users who are participating in the chat
          */
-        users: Users
+        users: Users<TUser>
     }
+
+    type UserType = 'self' | string
     
-    interface Users {
+    interface Users<TUser> {
         // If present, it means that this user is present and can type something 
         'self'?: null,
     
@@ -31,51 +39,68 @@ export declare namespace Potato {
          * These match the users 
          * that are in the chat
          */
-        [userId: string]: User | null | undefined
-    }
-    
-    /**
-     * Describes the user participating in the chat
-     */
-    interface User {
-        name: string,
-        avatar?: string
+        [userId: string]: TUser | null | undefined
     }
 
 
     /**
      * Context for the messages
      */
-    interface MessageContext {
-        messages: Messages
+    interface MessageContext<TMessageType> {
+        messages: Messages<TMessageType>
     }
 
     /**
      * Load the messages:
      * { [messageId: number]: messageBody }
      */
-    type Messages = { [messageId: string]: MessageBody }
-
+    type Messages<T> = Array<MessageBody<T>>
     
-    export interface GlobalContext extends GlobalChatContext, MessageContext {}
 
-    interface MessageBody<MessageInputType> {
-        input: MessageInputType,
+    /**
+     * Entire Global Context Type
+     */
+    export interface GlobalContext<TUser, TMessageType> extends GlobalChatContext<TUser>, MessageContext<TMessageType> {}
+
+
+    interface MessageBody<T> {
+        input: T,
         dateTimeDelta: number,
-        user: keyof GlobalChatContext['users']
+        user: UserType
+    }
+
+
+    interface MessageComponentProps{
+        // identifier of the message
+        messageId: number
+    }
+
+    type ComposerOption<TComposerType, TComposerInputType> = {
+        [type: TComposerType]: OptionProps<TComposerInputType>
     }
 
     namespace Composer {
-        interface GlobalContext {
-            composerType: ComposerType,
-            sendAction: <T> (input: Potato.Composer.NewMessage<T>) => Promise<void>,
-            composerOptions?: any
+        interface GlobalContext<TComposerType, TComposerInputType> {
+            composerType: TComposerType,
+            composerOptions: ComposerOption<TComposerType, TComposerInputType>
         }
+
+
+        export interface OptionComponentProps<TComposerType, TComposerInputType> {
+            composerType: TComposerType
+            sendAction: <T extends TComposerInputType> (input: Potato.Composer.NewMessage<T>, composerType: TComposerType) => Promise<void>,
+        }
+
+
+        interface OptionProps<TComposerType, TComposerInputType> {
+            component: (props: OptionComponentProps<TComposerType, TComposerInputType>) => JSX.Element
+        }
+
 
         interface NewMessage<T> {
             input: T,
-            user: 'self' | string,
-            messageId?: string | number
+            user: UserType,
+            messageId?: MessageComponentProps['messageId']
         }
     }
 

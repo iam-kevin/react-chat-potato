@@ -1,5 +1,4 @@
 import { ComposerContext, GlobalContext, GlobalContextAction } from "./internals"
-import { ComposerType, ComposerMessageInputType } from './internals/state/composer'
 
 import { useContextSelector } from 'use-context-selector'
 import { Potato } from "../../@types"
@@ -11,14 +10,14 @@ import { useCallback } from "react"
  * 
  * @param callback 
  */
-export function useComposerContext<T>(callback: (composerContext: Potato.Composer.GlobalContext) => T) {
-    return useContextSelector(ComposerContext, useCallback(state => {
+export function useComposerContext<T, TComposerType, TComposerInputType>(callback: <TComposerType, TComposerInputType> (composerContextState: Potato.Composer.GlobalContext<TComposerType, TComposerInputType>) => T) {
+    return useContextSelector<Potato.Composer.GlobalContext<TComposerType, TComposerInputType>, T>(ComposerContext, state => {
         if (state === undefined) {
             throw new Error("Make sure function is used in the <ComposerContext.Provider />")            
         }
 
-        return callback(state)
-    }, [callback]))
+        return callback(state) as T
+    })
 }
 
 
@@ -26,14 +25,14 @@ export function useComposerContext<T>(callback: (composerContext: Potato.Compose
  * 
  * @param callback 
  */
-export function useGlobalContext<T>(callback: (composerContext: Potato.GlobalContext) => T) {
-    return useContextSelector(GlobalContext, useCallback(state => {
+export function useGlobalContext<T, TComposerType, TComposerInputType>(callback: <TUser, TMessageType> (globalContextState: Potato.GlobalContext<TUser, TMessageType>) => T) {
+    return useContextSelector<Potato.GlobalContext<TComposerType, TComposerInputType>,T>(GlobalContext, state => {
         if (state === undefined) {
             throw new Error("Make sure function is used in the <GlobalContext.Provider />")            
         }
 
-        return callback(state)
-    }, [callback]))
+        return callback(state) as T
+    })
 }
 
 /**
@@ -41,25 +40,24 @@ export function useGlobalContext<T>(callback: (composerContext: Potato.GlobalCon
  * If undefined, gets the current set composer
  * @param composerType 
  */
-export function useComposer(composerType: ComposerType | undefined = undefined) {
+export function useComposer<TComposerType>(composerType: TComposerType | undefined = undefined) {
     // const [currentComposerType] = useAtom(currentComposer)    
-    const currentComposerType = useComposerContext(state => state.composerType)
+    const currentComposerType: TComposerType = useComposerContext(state => state.composerType) as TComposerType
     let cmpType = composerType
 
     if (cmpType === undefined) {
         cmpType = currentComposerType
     }
 
-    // const [composer] = useAtom(getComposerInfo(cmpType))
-    const composer = useComposerContext(state => state.composerOptions[currentComposerType])
-    return composer
+    // @ts-ignore
+    return useComposerContext(state => state.composerOptions[currentComposerType])
 }
 
 /**
  * Hook to get the component for rendering the composer
  * @param composerType 
  */
-export function useComposerComponent(composerType: ComposerType | undefined = undefined) {
+export function useComposerComponent<ComposerType>(composerType: ComposerType | undefined = undefined) {
     const composer = useComposer(composerType)
 
     // for renditions
@@ -71,9 +69,17 @@ export function useComposerComponent(composerType: ComposerType | undefined = un
  * Hook for getting loading the messages
  * @param callback 
  */
-export function useMessages<T>(callback: undefined | ((messages: Potato.Messages) => T) = undefined): T  {
+export function useMessages<T>(callback: undefined | (<TMessageInputType> (messages: Potato.Messages<TMessageInputType>) => T) = undefined): T  {
     // @ts-ignore
-    return useGlobalContext<T>(useCallback(state => callback === undefined ? state.messages as Potato.Messages: callback(state.messages) as T, [callback]))
+    return useGlobalContext(state => callback === undefined ? state.messages as Potato.Messages<TMessageInputType>: callback(state.messages) as T)
+}
+
+/**
+ * Hook for getting a message
+ * @param messageId 
+ */
+export function useMessage(messageId: Potato.MessageComponentProps['messageId']){
+    return useMessages(messages => messages[messageId])
 }
 
 
@@ -81,13 +87,45 @@ export function useMessages<T>(callback: undefined | ((messages: Potato.Messages
  * Hook for geting the chat users
  * @param callback 
  */
-export function useChatUsers<T>(callback: undefined | ((users: Potato.GlobalChatContext['users']) => T) = undefined): T  {
+export function useChatUsers<T>(callback: undefined | (<TUser> (users: Potato.GlobalChatContext<TUser>['users']) => T) = undefined): T  {
     // @ts-ignore
-    return useGlobalContext<T>(useCallback(state => callback === undefined ? state.users as Potato.GlobalChatContext['users']: callback(state.users) as T, [callback]))
+    return useGlobalContext(useCallback(state => callback === undefined ? state.users as Potato.GlobalChatContext<T>['users']: callback(state.users) as T, [callback]))
 }
 
 
-export function useMessageUpdater() {
+/**
+ * Gets the chat user
+ */
+export function useChatUser<TUser>(
+    userId: Potato.UserType, 
+    selfUser: TUser,
+    defaultUnknownUser: TUser | undefined = undefined
+) {
+    const user = useChatUsers(users => Object.keys(users).includes(userId) ? users[userId] : undefined)
+    // const user = useContextSelector(GlobalContext, state => Object.keys(state[0].users).includes(userId) ? state[0].users[userId] : undefined)
+
+    if (user !== undefined) {
+        if (user !== null) {
+            return user
+        } else {
+            return selfUser as TUser
+        }
+    }
+
+    // if there is no user.. the default layout for the user
+    if (defaultUnknownUser !== undefined) { return defaultUnknownUser as TUser }
+
+    // if there is not user 
+    //  and there is not default 
+    //  object
+    // return {
+    //     name: 'Anonymous',
+    // }
+    throw new Error("Default User need to be defined")
+}
+
+
+export function useMessageUpdater<TMessageInputType>() {
     // const messages = useMessages(messages => messages[messageId as unknown as number])
     const dispatch = useContextSelector(GlobalContextAction, state => state)
 
@@ -95,8 +133,29 @@ export function useMessageUpdater() {
         throw new Error("Make sure you have this wrapped in <GlobalContext.Provider>")
     }
 
-    return useCallback((message: Potato.Composer.NewMessage<ComposerMessageInputType>) => {
+    return useCallback((message: Potato.Composer.NewMessage<TMessageInputType>) => {
         // const originDate = useContextSelector(GlobalContext, state => state[0].dateTime)
         dispatch({ type: 'updateMessage', message })
     }, [dispatch])
 }
+
+
+export function useSendCallback<TComposerType, TMessageInputType>(input: TMessageInputType, composerType: TComposerType, sendAction: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>['sendAction'] ) {
+    // the message context is missing
+    // const [, updateMessageList] = useAtom(updateMessages)
+    const updateMessageList = useMessageUpdater<TMessageInputType>()
+    
+    // onSend Method
+    return useCallback(() => {
+        const newMessage: Potato.Composer.NewMessage<TMessageInputType> = {
+            input,
+            user: 'self'
+        }
+        sendAction(newMessage, composerType)
+            .then(() => {
+                // updates the message list with a new message
+                updateMessageList(newMessage)
+            })
+    }, [input, composerType, sendAction, updateMessageList])
+}
+

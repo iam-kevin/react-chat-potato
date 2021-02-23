@@ -2,9 +2,6 @@ import React from 'react'
 import ImageComposer from './ImageComposer'
 import TextComposer from './TextComposer'
 
-export interface ComposerComponentProps<T> {
-    sendCallback: (message: T) => Promise<void>
-}
 
 interface BaseComposerComponentProps {
     className: React.HTMLAttributes<HTMLFormElement>['className']

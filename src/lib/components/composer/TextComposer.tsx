@@ -1,28 +1,12 @@
-import React, { useCallback, useState } from 'react'
-import { BaseComposer, ComposerComponentProps } from './index'
-import { useComposerContext, useMessageUpdater } from '../../utils'
+import React, { useState } from 'react'
+import { BaseComposer } from './index'
+import { useSendCallback } from '../../utils'
+import { Potato } from '../../../../@types'
 
-/**
- * Properties for the Text composer
- */
 
-export default function TextComposer ({ sendCallback }: ComposerComponentProps<string>) {
+export default function TextComposer <TComposerType, TMessageInputType>({ composerType, sendAction }: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>) {
     const [value, setValue] = useState<string>("")
-    const sendAction = useComposerContext(state => state.sendAction)
-
-    // the message context is missing
-    // const [, updateMessageList] = useAtom(updateMessages)
-    const updateMessageList = useMessageUpdater()
-
-    const onSend = useCallback(() => {
-        const newMessage = { input: value, user: 'self' }
-        sendCallback(value)
-            .then(() => sendAction<string>(newMessage))
-            .then(() => {
-                // updates the message list with a new message
-                updateMessageList(newMessage)
-            })
-    }, [value, sendAction, updateMessageList, sendCallback])
+    const onSend = useSendCallback(value, composerType, sendAction)
 
     return (
         <BaseComposer className="w-full justify-start flex items-start gap-4">
