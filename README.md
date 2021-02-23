@@ -57,7 +57,7 @@ type MessageInputType =
     | string    // message type for image
 
 
-const composerOptions: Potato.Composer.GlobalContext<ComposerType, MessageInputType> = {
+const composerConfig: Potato.Composer.GlobalContext<ComposerType, MessageInputType> = {
     composerType: 'text',    // default composer 'text' | options 'text', 'image',
     // You might want to move this to the BaseComposer
     composerOptions: {
@@ -86,7 +86,7 @@ export default function App() {
             initialComposer='text'
             initialMessages={messages}
             globalChatContext={globalChatContext}
-            composerOptions={composerOptions}
+            composerConfig={composerConfig}
             sendAction={sendAction} />
     )
 }
