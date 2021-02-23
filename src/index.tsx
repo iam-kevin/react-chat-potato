@@ -82,9 +82,6 @@ function ComposerBox ({ composerOptions, sendCallback, initialComposer }: any) {
     )
 }
 
-interface GlobalContext {
-
-}
 
 /**
  * Provider to provide the chat ui with state to manage
