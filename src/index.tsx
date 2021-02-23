@@ -89,9 +89,9 @@ interface GlobalContextProviderProps {
 }
 
 
-const GlobalContextProvider = ({ children, initialMessages, globalChatContext: globalContextState }: GlobalContextProviderProps) => {
-    const [globalVals, globalDispatch] = useReducer(potatoReducer, { ...globalContextState, messages: initialMessages || [] } as Potato.GlobalContext)
-    // const initialState: Potato.GlobalContext = { ...globalContextState, messages: initialMessages || [] }
+const GlobalContextProvider = ({ children, initialMessages, globalChatContext }: GlobalContextProviderProps) => {
+    const initialState: Potato.GlobalContext = { ...globalChatContext, messages: initialMessages || [] }
+    const [globalVals, globalDispatch] = useReducer(potatoReducer, initialState)
 
     return (
         <GlobalContext.Provider value={globalVals}>
@@ -108,6 +108,7 @@ const GlobalContextProvider = ({ children, initialMessages, globalChatContext: g
  * chat context
  */
 export function PotatoChat ({ initialMessages, globalChatContext, composerOptions, sendCallback, initialComposer }: PotatoChatProps) {
+    // console.log("Initialized Globasl State: ", globalChatContext)
     return(
         <GlobalContextProvider
             initialMessages={initialMessages} 

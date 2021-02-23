@@ -6,24 +6,34 @@ import { Potato } from "../../@types"
 
 import { useCallback } from "react"
 
+
+/**
+ * 
+ * @param callback 
+ */
 export function useComposerContext<T>(callback: (composerContext: Potato.Composer.GlobalContext) => T) {
-    return useContextSelector(ComposerContext, state => {
+    return useContextSelector(ComposerContext, useCallback(state => {
         if (state === undefined) {
             throw new Error("Make sure function is used in the <ComposerContext.Provider />")            
         }
 
         return callback(state)
-    })
+    }, [callback]))
 }
 
-export function useGlobalContext<T>(callback: (composerContext: Potato.GlobalChatContext) => T) {
-    return useContextSelector(GlobalContext, state => {
+
+/**
+ * 
+ * @param callback 
+ */
+export function useGlobalContext<T>(callback: (composerContext: Potato.GlobalContext) => T) {
+    return useContextSelector(GlobalContext, useCallback(state => {
         if (state === undefined) {
             throw new Error("Make sure function is used in the <GlobalContext.Provider />")            
         }
 
         return callback(state)
-    })
+    }, [callback]))
 }
 
 /**
@@ -46,7 +56,7 @@ export function useComposer(composerType: ComposerType | undefined = undefined) 
 }
 
 /**
- * Gets the component for rendering the composer
+ * Hook to get the component for rendering the composer
  * @param composerType 
  */
 export function useComposerComponent(composerType: ComposerType | undefined = undefined) {
@@ -57,11 +67,20 @@ export function useComposerComponent(composerType: ComposerType | undefined = un
 }
 
 
+/**
+ * Hook for getting loading the messages
+ * @param callback 
+ */
 export function useMessages<T>(callback: undefined | ((messages: Potato.Messages) => T) = undefined): T  {
     // @ts-ignore
     return useGlobalContext<T>(useCallback(state => callback === undefined ? state.messages as Potato.Messages: callback(state.messages) as T, [callback]))
 }
 
+
+/**
+ * Hook for geting the chat users
+ * @param callback 
+ */
 export function useChatUsers<T>(callback: undefined | ((users: Potato.GlobalChatContext['users']) => T) = undefined): T  {
     // @ts-ignore
     return useGlobalContext<T>(useCallback(state => callback === undefined ? state.users as Potato.GlobalChatContext['users']: callback(state.users) as T, [callback]))
