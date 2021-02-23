@@ -42,8 +42,8 @@ export interface PotatoChatProps {
     composerOptions?: Potato.Composer.GlobalContext
     sendCallback: PotatoChatComposerProps['sendCallback']
     initialComposer: PotatoChatComposerProps['initialComposer']
-    children: React.ReactNode
 }
+
 
 interface NewMessageCanvasProps {}
 function NewMessagesCanvas (props: NewMessageCanvasProps) {
