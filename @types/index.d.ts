@@ -14,18 +14,13 @@ export interface PotatoChatProps {
  * chat across a potato instance
  */
 export declare namespace Potato {
-    export interface GlobalContext {
+    export interface GlobalChatContext {
         dateTime: Date | number,
     
         /**
          * Users who are participating in the chat
          */
         users: Users
-
-        /**
-         * Messages
-         */
-        messages: Messages
     }
     
     interface Users {
@@ -61,10 +56,13 @@ export declare namespace Potato {
      */
     type Messages = { [messageId: string]: MessageBody }
 
+    
+    export interface GlobalContext extends GlobalChatContext, MessageContext {}
+
     interface MessageBody<MessageInputType> {
         input: MessageInputType,
         dateTimeDelta: number,
-        user: keyof GlobalContext['users']
+        user: keyof GlobalChatContext['users']
     }
 
     namespace Composer {

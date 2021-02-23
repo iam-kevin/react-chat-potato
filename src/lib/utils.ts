@@ -16,7 +16,7 @@ export function useComposerContext<T>(callback: (composerContext: Potato.Compose
     })
 }
 
-export function useGlobalContext<T>(callback: (composerContext: Potato.GlobalContext) => T) {
+export function useGlobalContext<T>(callback: (composerContext: Potato.GlobalChatContext) => T) {
     return useContextSelector(GlobalContext, state => {
         if (state === undefined) {
             throw new Error("Make sure function is used in the <GlobalContext.Provider />")            
@@ -62,9 +62,9 @@ export function useMessages<T>(callback: undefined | ((messages: Potato.Messages
     return useGlobalContext<T>(useCallback(state => callback === undefined ? state.messages as Potato.Messages: callback(state.messages) as T, [callback]))
 }
 
-export function useChatUsers<T>(callback: undefined | ((users: Potato.GlobalContext['users']) => T) = undefined): T  {
+export function useChatUsers<T>(callback: undefined | ((users: Potato.GlobalChatContext['users']) => T) = undefined): T  {
     // @ts-ignore
-    return useGlobalContext<T>(useCallback(state => callback === undefined ? state.users as Potato.GlobalContext['users']: callback(state.users) as T, [callback]))
+    return useGlobalContext<T>(useCallback(state => callback === undefined ? state.users as Potato.GlobalChatContext['users']: callback(state.users) as T, [callback]))
 }
 
 

@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react'
-import { Provider } from 'jotai'
 import { Potato } from '../@types/index'
 
 import { ComposerContext, ComposerMessageInputType, ComposerType, GlobalContext, GlobalContextAction, potatoReducer } from './lib/internals/state'
@@ -39,25 +38,12 @@ function NewPotatoChatComposer({ initialComposer, sendCallback }: PotatoChatComp
 
 export interface PotatoChatProps {
     initialMessages?: Potato.Messages
-    globalContextState: Potato.GlobalContext
+    globalChatContext: Potato.GlobalChatContext
     composerOptions?: Potato.Composer.GlobalContext
     sendCallback: PotatoChatComposerProps['sendCallback']
     initialComposer: PotatoChatComposerProps['initialComposer']
     children: React.ReactNode
 }
-/**
- * Provider to provide the chat ui with state to manage
- * chat context
- */
-export function PotatoProvider ({ children }: any) {
-
-    return(
-        <Provider>
-            {children}
-        </Provider>
-    )
-}
-
 
 interface NewMessageCanvasProps {}
 function NewMessagesCanvas (props: NewMessageCanvasProps) {
@@ -85,23 +71,28 @@ function MessageBoard () {
 }
 
 function ComposerBox ({ composerOptions, sendCallback, initialComposer }: any) {
-    const [composerOpts, setComposerOpts] = useState(composerOptions)
+    const [composerOpts, ] = useState(composerOptions)
 
     return (
         // @ts-ignore
-        <ComposerContext.Provider value={[composerOpts, setComposerOpts]}>
+        <ComposerContext.Provider value={composerOpts}>
             {/* Composer */}
             <NewPotatoChatComposer initialComposer={initialComposer} sendCallback={sendCallback} />
         </ComposerContext.Provider>
     )
 }
 
+interface GlobalContext {
+
+}
+
 /**
  * Provider to provide the chat ui with state to manage
  * chat context
  */
-export function NewPotatoChat ({ initialMessages, globalContextState, composerOptions, sendCallback, initialComposer }: PotatoChatProps) {
-    const [globalVals, globalDispatch] = useReducer(potatoReducer, globalContextState)
+export function PotatoChat ({ initialMessages, globalChatContext: globalContextState, composerOptions, sendCallback, initialComposer }: PotatoChatProps) {
+    const initialState: Potato.GlobalContext = { ...globalContextState, messages: initialMessages || [] } 
+    const [globalVals, globalDispatch] = useReducer(potatoReducer, initialState)
 
     return(
         <GlobalContext.Provider value={globalVals}>

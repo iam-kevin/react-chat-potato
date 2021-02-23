@@ -4,8 +4,6 @@
  */
 
 import { Potato } from '../../../../@types/index'
-import { useReducer } from 'react'
-
 import { createContext } from 'use-context-selector'
 import produce from 'immer'
 
@@ -35,7 +33,7 @@ export const potatoReducer = (messages: Potato.GlobalContext, action: GlobalDisp
                 } as Potato.MessageBody<ComposerMessageInputType>)
             })
         default:
-            throw new Error("Unknown action")
+            throw new Error("Unknown action type: " + action.type)
     }
 }
 

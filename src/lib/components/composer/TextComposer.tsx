@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
 import { BaseComposer, ComposerComponentProps } from './index'
-
 import { useComposerContext, useMessageUpdater } from '../../utils'
 
 /**
