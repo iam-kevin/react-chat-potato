@@ -19,7 +19,6 @@ function PotatoChatComposer<TComposerType extends string, TMessageInputType>({ i
     // callback for adding switching btn types
     const onChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setCompType(e.target.value as TComposerType)
-        console.log("Something:", e.target.value)
     }, [])
 
 

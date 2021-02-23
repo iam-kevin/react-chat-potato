@@ -50,7 +50,7 @@ export function useComposer<TComposerType>(composerType: TComposerType | undefin
     }
 
     // @ts-ignore
-    return useComposerContext(state => state.composerOptions[currentComposerType])
+    return useComposerContext(state => state.composerOptions[cmpType])
 }
 
 /**
