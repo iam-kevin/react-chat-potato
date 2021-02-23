@@ -8,10 +8,45 @@ Only dependecies (hopefully) are:
 
 ## Usage
 
+`./custom-components/index.js`
+```tsx
+export function ImageComposer <TComposerType, TMessageInputType>({ composerType, sendAction }: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType> ) {
+    const [fileValue, setFile] = useState<string>("")
+
+    const onSend = useSendCallback(fileValue, composerType, sendAction)
+    return (
+        <div>
+            <div>Send the image here</div>
+            <input type="file" value={fileValue} onChange={(e) => setFile(e.target.value)}/>
+            <button onClick={onSend} className="bg-green-400 px-4 py-2 rounded-sm">
+                Send Image
+            </button>
+        </div>
+    )
+}
+    
+
+export function TextComposer <TComposerType, TMessageInputType>({ composerType, sendAction }: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>) {
+    const [value, setValue] = useState<string>("")
+    const onSend = useSendCallback(value, composerType, sendAction)
+
+    return (
+        <div className="w-full justify-start flex items-start gap-4">
+            <textarea className="border w-96" value={value} onChange={(e) => setValue(e.target.value)}/>
+            <button onClick={onSend} className="bg-green-700 px-4 py-2 rounded-sm">
+                Send
+            </button>
+        </div>
+    )
+}
+```
+<br />
+
+`index.js`
 ```tsx
 import { Potato } from 'react-chat-potato/@types';
 import { PotatoChat } from 'react-chat-potato'
-import { ImageComposer, TextComposer } from 'react-chat-potato/lib';
+import { ImageComposer, TextComposer } from './custom-components';
 
 
 interface User {
@@ -91,8 +126,12 @@ export default function ChatBox() {
             sendAction={sendAction} />
     )
 }
-
 ```
+
+### GIF
+
+![Demo GIF](resources/using-react-chat-potato.gif)
+
 
 ## License
 
