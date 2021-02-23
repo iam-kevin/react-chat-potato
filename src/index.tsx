@@ -8,12 +8,11 @@ import { useComposerComponent, useMessages } from './lib/utils'
 
 interface PotatoChatComposerProps<TComposerType, TMessageInputType> {
     initialComposer: TComposerType
-    composerOptions: Potato.Composer.GlobalContext<TComposerType, TMessageInputType>
     sendAction: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>['sendAction']
 }
 
 
-function PotatoChatComposer<TComposerType extends string, TMessageInputType>({ initialComposer, composerOptions, sendAction }: PotatoChatComposerProps<TComposerType, TMessageInputType>) {
+function PotatoChatComposer<TComposerType extends string, TMessageInputType>({ initialComposer, sendAction }: PotatoChatComposerProps<TComposerType, TMessageInputType>) {
     const [compType, setCompType] = useState<TComposerType>(initialComposer)
     const ComposerComponent = useComposerComponent(compType)
 
@@ -69,13 +68,13 @@ function MessageBoard () {
 
 
 interface ComposerBoxProps<TComposerType, TMessageInputType> {
-    composerOptions: PotatoChatComposerProps<TComposerType, TMessageInputType>['composerOptions']
+    composerConfig: Potato.Composer.GlobalContext<TComposerType, TMessageInputType>
     children: React.ReactNode
 }
 
 
-function ComposerProvider <TComposerType, TMessageInputType>({ composerOptions, children }: ComposerBoxProps<TComposerType, TMessageInputType>) {
-    const [composerOpts, ] = useState<Potato.Composer.GlobalContext<TComposerType, TMessageInputType>>(composerOptions)
+function ComposerProvider <TComposerType, TMessageInputType>({ composerConfig, children }: ComposerBoxProps<TComposerType, TMessageInputType>) {
+    const [composerOpts, ] = useState<Potato.Composer.GlobalContext<TComposerType, TMessageInputType>>(composerConfig)
 
     return (
         // @ts-ignore
@@ -114,9 +113,9 @@ const GlobalContextProvider = <TUser, TMessage> ({ children, initialMessages, gl
 export interface PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType> {
     initialMessages?: Potato.Messages<TMessage>
     globalChatContext: Potato.GlobalChatContext<TUser>
-    composerOptions: Potato.Composer.GlobalContext<TComposerType, TMessageInputType>
+    composerConfig: Potato.Composer.GlobalContext<TComposerType, TMessageInputType>
     sendAction: PotatoChatComposerProps<TComposerType, TMessageInputType>['sendAction']
-    initialComposer: PotatoChatComposerProps<TComposerType, TMessageInputType>['initialComposer']
+    initialComposer: TComposerType
 }
 
 
@@ -124,16 +123,15 @@ export interface PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerTy
  * Provider to provide the chat ui with state to manage
  * chat context
  */
-export function PotatoChat <TUser, TMessage, TMessageInputType, TComposerType extends string> ({ initialMessages, globalChatContext, composerOptions, sendAction, initialComposer }: PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType>) {
+export function PotatoChat <TUser, TMessage, TMessageInputType, TComposerType extends string> ({ initialMessages, globalChatContext, composerConfig: composerOptions, sendAction, initialComposer }: PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType>) {
     // console.log("Initialized Globasl State: ", globalChatContext)
     return(
         <GlobalContextProvider
             initialMessages={initialMessages} 
             globalChatContext={globalChatContext}>
             <MessageBoard />
-            <ComposerProvider composerOptions={composerOptions}>
-                <PotatoChatComposer 
-                    composerOptions={composerOptions} 
+            <ComposerProvider composerConfig={composerOptions}>
+                <PotatoChatComposer
                     initialComposer={initialComposer}
                     sendAction={sendAction}/>
             </ComposerProvider>
