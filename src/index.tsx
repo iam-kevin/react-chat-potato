@@ -26,6 +26,9 @@ function PotatoChatComposer<TComposerType extends string, TMessageInputType>({ i
 
     return (
         <>
+            {/* 
+                TODO: Fix the composer selector            
+            */}
             <ComposerComponent composerType={compType} sendAction={sendAction} />
             <div>
                 <label>Composer Option:</label>
