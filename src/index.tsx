@@ -82,24 +82,41 @@ function ComposerBox ({ composerOptions, sendCallback, initialComposer }: any) {
     )
 }
 
+interface GlobalContextProviderProps {
+    initialMessages?: Potato.Messages
+    globalChatContext: Potato.GlobalChatContext
+    children: React.ReactNode
+}
+
+
+const GlobalContextProvider = ({ children, initialMessages, globalChatContext: globalContextState }: GlobalContextProviderProps) => {
+    const [globalVals, globalDispatch] = useReducer(potatoReducer, { ...globalContextState, messages: initialMessages || [] } as Potato.GlobalContext)
+    // const initialState: Potato.GlobalContext = { ...globalContextState, messages: initialMessages || [] }
+
+    return (
+        <GlobalContext.Provider value={globalVals}>
+            <GlobalContextAction.Provider value={globalDispatch}>
+                {children}
+            </GlobalContextAction.Provider>
+        </GlobalContext.Provider>
+    )
+}
+
 
 /**
  * Provider to provide the chat ui with state to manage
  * chat context
  */
-export function PotatoChat ({ initialMessages, globalChatContext: globalContextState, composerOptions, sendCallback, initialComposer }: PotatoChatProps) {
-    const initialState: Potato.GlobalContext = { ...globalContextState, messages: initialMessages || [] } 
-    const [globalVals, globalDispatch] = useReducer(potatoReducer, initialState)
-
+export function PotatoChat ({ initialMessages, globalChatContext, composerOptions, sendCallback, initialComposer }: PotatoChatProps) {
     return(
-        <GlobalContext.Provider value={globalVals}>
-            <GlobalContextAction.Provider value={globalDispatch}>
-                <MessageBoard />
-                <ComposerBox 
-                    composerOptions={composerOptions} 
-                    initialComposer={initialComposer}
-                    sendCallback={sendCallback}/>
-            </GlobalContextAction.Provider>
-        </GlobalContext.Provider>
+        <GlobalContextProvider
+            initialMessages={initialMessages} 
+            globalChatContext={globalChatContext}>
+            <MessageBoard />
+            <ComposerBox 
+                composerOptions={composerOptions} 
+                initialComposer={initialComposer}
+                sendCallback={sendCallback}/>
+        </GlobalContextProvider>
     )
 }
