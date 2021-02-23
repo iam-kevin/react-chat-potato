@@ -1,7 +1,7 @@
-import { useAtom } from 'jotai'
 import React, { useCallback, useState } from 'react'
-import { composerAction, updateMessages } from '../../internals'
 import { BaseComposer, ComposerComponentProps } from './index'
+
+import { useComposerContext, useMessageUpdater } from '../../utils'
 
 /**
  * Properties for the Text composer
@@ -9,8 +9,11 @@ import { BaseComposer, ComposerComponentProps } from './index'
 
 export default function TextComposer ({ sendCallback }: ComposerComponentProps<string>) {
     const [value, setValue] = useState<string>("")
-    const [sendAction] = useAtom(composerAction)
-    const [, updateMessageList] = useAtom(updateMessages)
+    const sendAction = useComposerContext(state => state.sendAction)
+
+    // the message context is missing
+    // const [, updateMessageList] = useAtom(updateMessages)
+    const updateMessageList = useMessageUpdater()
 
     const onSend = useCallback(() => {
         const newMessage = { input: value, user: 'self' }
@@ -20,7 +23,6 @@ export default function TextComposer ({ sendCallback }: ComposerComponentProps<s
                 // updates the message list with a new message
                 updateMessageList(newMessage)
             })
-
     }, [value, sendAction, updateMessageList, sendCallback])
 
     return (

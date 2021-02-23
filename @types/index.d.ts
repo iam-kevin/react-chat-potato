@@ -21,6 +21,11 @@ export declare namespace Potato {
          * Users who are participating in the chat
          */
         users: Users
+
+        /**
+         * Messages
+         */
+        messages: Messages
     }
     
     interface Users {
@@ -63,6 +68,12 @@ export declare namespace Potato {
     }
 
     namespace Composer {
+        interface GlobalContext {
+            composerType: ComposerType,
+            sendAction: <T> (input: Potato.Composer.NewMessage<T>) => Promise<void>,
+            composerOptions?: any
+        }
+
         interface NewMessage<T> {
             input: T,
             user: 'self' | string,

@@ -3,32 +3,43 @@
  * entire chat screen
  */
 
-import { atom } from 'jotai'
 import { Potato } from '../../../../@types/index'
+import { useReducer } from 'react'
+
+import { createContext } from 'use-context-selector'
+import produce from 'immer'
+
+type ActionType = 'updateMessage'
+
+type GlobalDispatchAction = { type: ActionType, message: Potato.Composer.NewMessage<ComposerMessageInputType> }
+type MessageDispatch = (action: GlobalDispatchAction) => void
+type ComposerMessageInputType = 
+    | string 
+    | string
+    | number
+
+export const GlobalContext = createContext<Potato.GlobalContext | undefined>(undefined)
+export const GlobalContextAction = createContext<MessageDispatch | undefined>(undefined)
 
 
-const globalContextAtom = atom<Potato.GlobalContext>({
-    dateTime: Date.now(),
-    users: {
-        'self': null,   // TODO: this should indicate that user can chat
-        'kevin': {
-            name: "Kevin James",
-        },
-        'brian': {
-            name: "Brian Gaspar"
-        }
+export const potatoReducer = (messages: Potato.GlobalContext, action: GlobalDispatchAction) => {
+    switch(action.type) {
+        case 'updateMessage':
+            const { input, user } = action.message
+            return produce(messages, draft => {
+                draft.messages.push({
+                    input,
+                    dateTimeDelta: Date.now(),
+                    // dateTimeDelta: Date.now() - (new Date(originDate)).getTime(),
+                    user
+                } as Potato.MessageBody<ComposerMessageInputType>)
+            })
+        default:
+            throw new Error("Unknown action")
     }
-} as Potato.GlobalContext)
+}
 
 
-// Gets the users involved in the chat
-export const rUsers = atom(get => get(globalContextAtom).users)
 
-/**
- * Gets the user by their initialized user id
- * @param userId user's id as initialized in the globalContext
- */
-export const getUser = (userId: string) => atom(get => get(rUsers)[userId])
-
-export const rChatDateTime = atom(get => get(globalContextAtom).dateTime)
-
+// @ts-ignore
+// export const useGlobalValue = (globalContext: Potato.GlobalContext) => useReducer(potatoReducer, globalContext)

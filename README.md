@@ -3,8 +3,7 @@
 A fun project, that tries to take a different approach from community loved [react-native-gifted-chat]() when handling state and actions.
 
 Only dependecies (hopefully) are:
-  - [react@17.0.1](https://github.com/facebook/react)
-  - [jotai@0.14.1](https://github.com/pmndrs/jotai)
+  - [use-context-selector@1.3.7](https://github.com/dai-shi/use-context-selector)
   - [immer@8.0.1](https://github.com/immerjs/immer)
 
 ## Usage

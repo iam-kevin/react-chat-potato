@@ -1,20 +1,22 @@
 import React, { useCallback, useState } from 'react'
-import { Provider, useAtom } from 'jotai'
+import { Provider } from 'jotai'
 import { Potato } from '../@types/index'
 
-import { ComposerMessageInputType, ComposerType, rMessageIds } from './lib/internals/state'
-import { BaseMessage } from './lib/components/frame'
-import { useComposerComponent } from './lib/utils'
+import { ComposerContext, ComposerMessageInputType, ComposerType, GlobalContext, GlobalContextAction, potatoReducer } from './lib/internals/state'
+import { NewBaseMessage } from './lib/components/frame'
+import { useComposerComponent, useMessages } from './lib/utils'
 import { ComposerComponentProps } from './lib'
+import { useReducer } from 'react'
 
 interface PotatoChatComposerProps {
     initialComposer: ComposerType
     sendCallback: ComposerComponentProps<ComposerMessageInputType>['sendCallback']
 }
 
-function PotatoChatComposer({ initialComposer, sendCallback }: PotatoChatComposerProps) {
+
+function NewPotatoChatComposer({ initialComposer, sendCallback }: PotatoChatComposerProps) {
     const [compType, setCompType] = useState<ComposerType>(initialComposer)
-    const ComposerComponent = useComposerComponent<ComposerType>(compType)
+    const ComposerComponent = useComposerComponent(compType)
 
     // callback for adding switching btn types
     const onChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => setCompType(e.target.value as ComposerType), [])
@@ -34,58 +36,82 @@ function PotatoChatComposer({ initialComposer, sendCallback }: PotatoChatCompose
     )
 }
 
-interface MessageCanvas {}
-function MessagesCanvas (props: MessageCanvas) {
-    const [keys] = useAtom(rMessageIds)
+
+export interface PotatoChatProps {
+    initialMessages?: Potato.Messages
+    globalContextState: Potato.GlobalContext
+    composerOptions?: Potato.Composer.GlobalContext
+    sendCallback: PotatoChatComposerProps['sendCallback']
+    initialComposer: PotatoChatComposerProps['initialComposer']
+    children: React.ReactNode
+}
+/**
+ * Provider to provide the chat ui with state to manage
+ * chat context
+ */
+export function PotatoProvider ({ children }: any) {
+
+    return(
+        <Provider>
+            {children}
+        </Provider>
+    )
+}
+
+
+interface NewMessageCanvasProps {}
+function NewMessagesCanvas (props: NewMessageCanvasProps) {
+    // const [keys] = useAtom(rMessageIds)
+    const keys = useMessages(state => Object.keys(state))
     
     return (
         <>
             {
                 keys.map((messageId) => (
-                    // Message section
-                    <div className="" key={`message-id-${messageId}`}>
-                        {/* actual message bubble */}
-                        <BaseMessage messageId={messageId} /> 
-                    </div>
+                    // {/* actual message bubble */}
+                    <NewBaseMessage messageId={messageId} key={`message-id-${messageId}`} /> 
                 ))                 
             }
         </>
     )
 }
 
-
-
-interface PotatoChatProps extends PotatoChatComposerProps {}
-
-/**
- * Entire housed chat UI
- */
-export function PotatoChat({ initialComposer, sendCallback }: PotatoChatProps) {    
+function MessageBoard () {
     return (
         <div>
-            <div>
-                <MessagesCanvas />
-            </div>
-            <PotatoChatComposer
-                sendCallback={sendCallback}
-                initialComposer={initialComposer} />
+            <NewMessagesCanvas />
         </div>
     )
 }
 
+function ComposerBox ({ composerOptions, sendCallback, initialComposer }: any) {
+    const [composerOpts, setComposerOpts] = useState(composerOptions)
 
-export interface PotatoProviderProps {
-    initialMessages?: Potato.Messages,
-    children: any
+    return (
+        // @ts-ignore
+        <ComposerContext.Provider value={[composerOpts, setComposerOpts]}>
+            {/* Composer */}
+            <NewPotatoChatComposer initialComposer={initialComposer} sendCallback={sendCallback} />
+        </ComposerContext.Provider>
+    )
 }
+
 /**
  * Provider to provide the chat ui with state to manage
  * chat context
  */
-export function PotatoProvider ({ children }: PotatoProviderProps) {
+export function NewPotatoChat ({ initialMessages, globalContextState, composerOptions, sendCallback, initialComposer }: PotatoChatProps) {
+    const [globalVals, globalDispatch] = useReducer(potatoReducer, globalContextState)
+
     return(
-        <Provider>
-            {children}
-        </Provider>
+        <GlobalContext.Provider value={globalVals}>
+            <GlobalContextAction.Provider value={globalDispatch}>
+                <MessageBoard />
+                <ComposerBox 
+                    composerOptions={composerOptions} 
+                    initialComposer={initialComposer}
+                    sendCallback={sendCallback}/>
+            </GlobalContextAction.Provider>
+        </GlobalContext.Provider>
     )
 }

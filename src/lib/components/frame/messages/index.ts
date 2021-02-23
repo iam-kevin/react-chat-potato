@@ -1,3 +1,4 @@
-import BaseMessage from './BaseMessage'
+// import BaseMessage from './BaseMessage'
+import NewBaseMessage from './BBMessage'
 
-export { BaseMessage }
+export { NewBaseMessage }

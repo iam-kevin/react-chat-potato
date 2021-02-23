@@ -1,7 +1,6 @@
-import { useAtom } from 'jotai'
 import React from 'react'
 import { Potato } from '../../../../../@types'
-import { getMessage, getUser } from '../../../internals'
+import { useChatUsers, useMessages } from '../../../utils'
 
 interface MessageProps {
     // identifier of the message
@@ -16,7 +15,8 @@ export function useChatUser(
     selfUser: Potato.User,
     defaultUnknownUser: Potato.User | undefined = undefined
 ) {
-    const [user] = useAtom(getUser(userId))
+    const user = useChatUsers(users => Object.keys(users).includes(userId) ? users[userId] : undefined)
+    // const user = useContextSelector(GlobalContext, state => Object.keys(state[0].users).includes(userId) ? state[0].users[userId] : undefined)
 
     if (user !== undefined) {
         if (user !== null) {
@@ -37,8 +37,13 @@ export function useChatUser(
     } as Potato.User
 }
 
-export default function BaseMessage ({ messageId }: MessageProps) {
-    const [message] = useAtom(getMessage(messageId as unknown as number))
+export function useMessage(messageId: string) {
+    const message = useMessages(messages => messages[messageId as unknown as number])
+    return message
+}
+
+export default function NewBaseMessage ({ messageId }: MessageProps) {
+    const message = useMessage(messageId)
     const user = useChatUser(message.user, { name: "Me" })
 
     return (
