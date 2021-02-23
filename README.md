@@ -57,9 +57,8 @@ type MessageInputType =
     | string    // message type for image
 
 
-const composerConfig: Potato.Composer.GlobalContext<ComposerType, MessageInputType> = {
-    composerType: 'text',    // default composer 'text' | options 'text', 'image',
-    // You might want to move this to the BaseComposer
+const composerOptions: Potato.Composer.GlobalContext<ComposerType, MessageInputType> = {
+    composerType: 'text', 
     composerOptions: {
         'text': {
             component: TextComposer,
@@ -71,22 +70,24 @@ const composerConfig: Potato.Composer.GlobalContext<ComposerType, MessageInputTy
 }
 
 
-export default function App() {
+export default function ChatBox() {
     const sendAction = async (input: Potato.Composer.NewMessage<MessageInputType>, composerType: ComposerType) => {
-        console.log("Sent the message")
+        console.log("Send message:", input)
+        console.log("ComposerType:", composerType)
+
         switch (composerType) {
-            case 'text': console.log("Text based message"); break;
-            case 'image': console.log("Image based message"); break;
+            case 'text': console.log(">> Text based message"); break;
+            case 'image': console.log(">> Image based message"); break;
             default: console.log("DEFAULT MESSAGE TRANSFER")
         }
     }
 
     return (
         <PotatoChat 
-            initialComposer='text'
+            initialComposer='image'
             initialMessages={messages}
             globalChatContext={globalChatContext}
-            composerConfig={composerConfig}
+            composerConfig={composerOptions}
             sendAction={sendAction} />
     )
 }
