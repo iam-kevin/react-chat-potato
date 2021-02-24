@@ -3,3 +3,5 @@ node_modules/
 examples/
 resources/
 README.md
+yarn.lock
+tailwind.config.js
