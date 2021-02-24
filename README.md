@@ -29,6 +29,16 @@ Principles:
 - Nothing is served for primary use (though there are things that are provided as example components)
 - Can be used with both `React` and `ReactNative` environments
 
+## Things to try to play around with: 
+(I should probably move this to Github Project)
+
+- [x] **Enabling Customizable Composers**: You are able to build composer components depending on your use case. For instance: text area for text input, custom audio mic for audio input. See Usage example
+    
+    
+- [ ] Using delta datetime _[on progress]_ (and having only one reference for time)
+- [ ] Wrapping with placeholder view component (not to pick sides btn RJS / RN)
+- [ ] Adding a default components package with theme
+
 ## Usage
 
 `./custom-components/index.js`
