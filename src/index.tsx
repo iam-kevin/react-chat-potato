@@ -1,85 +1,48 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
 import { Potato } from '../@types/index'
 
-import { ComposerContext, GlobalContext, GlobalContextAction, useGlobalValue } from './lib/internals/state'
-import { NewBaseMessage } from './lib/components/frame'
-import { useComposerComponent, useMessages } from './lib/utils'
+import { ComposerContext, GlobalContext, ComposerContextAction, useGlobalValue, useInitComposerValue, GlobalContextAction } from './lib/internals/state'
+import { useMessages } from './lib/utils'
 
 
-interface PotatoChatComposerProps<TComposerType, TMessageInputType> {
-    initialComposer: TComposerType
-    sendAction: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>['sendAction']
-}
 
-
-function PotatoChatComposer<TComposerType extends string, TMessageInputType>({ initialComposer, sendAction }: PotatoChatComposerProps<TComposerType, TMessageInputType>) {
-    const [compType, setCompType] = useState<TComposerType>(initialComposer)
-    const ComposerComponent = useComposerComponent(compType)
-
-    // callback for adding switching btn types
-    const onChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        setCompType(e.target.value as TComposerType)
-    }, [])
-
-
-    return (
-        <>
-            {/* 
-                TODO: Fix the composer selector            
-            */}
-            <ComposerComponent composerType={compType} sendAction={sendAction} />
-            <div>
-                <label>Composer Option:</label>
-                <select name="composer-option" onChange={onChange} value={compType}>
-                    <option value="text">Text</option>
-                    <option value="image">Image</option>
-                </select>
-            </div>
-        </>
-    )
-}
-
-
-interface NewMessageCanvasProps {}
-function NewMessagesCanvas (props: NewMessageCanvasProps) {
+interface MessageCanvasProps { children: (props: { messageId: number, key: string | number }) => JSX.Element }
+function MessageCanvas ({ children }: MessageCanvasProps) {
     // const [keys] = useAtom(rMessageIds)
     const keys = useMessages(state => Object.keys(state).map(n => parseInt(n)))
     
     return (
         <>
             {
-                keys.map((messageId) => (
-                    // {/* actual message bubble */}
-                    <NewBaseMessage messageId={messageId} key={`message-id-${messageId}`} /> 
-                ))                 
+                keys.map((messageId) => ( children({ messageId, key:`message-id-${messageId}` })))
             }
         </>
     )
 }
 
-function MessageBoard () {
-    return (
-        <div>
-            <NewMessagesCanvas />
-        </div>
-    )
-}
 
-
-interface ComposerBoxProps<TComposerType, TMessageInputType> {
-    composerConfig: Potato.Composer.GlobalContext<TComposerType, TMessageInputType>
+interface ComposerProviderProps<TComposerType, TMessageInputType> {
+    initialComposer: TComposerType
+    composerOptions: Potato.ComposerOption<TComposerType, TMessageInputType>
     children: React.ReactNode
 }
 
 
-function ComposerProvider <TComposerType, TMessageInputType>({ composerConfig, children }: ComposerBoxProps<TComposerType, TMessageInputType>) {
-    const [composerOpts, ] = useState<Potato.Composer.GlobalContext<TComposerType, TMessageInputType>>(composerConfig)
+function ComposerProvider <TComposerType, TMessageInputType>({ composerOptions, initialComposer, children }: ComposerProviderProps<TComposerType, TMessageInputType>) {
+    // const [composerOpts, ] = useState<Potato.Composer.GlobalContext<TComposerType, TMessageInputType>>(composerConfig)
+    const initComposerConfig = {
+        composerType: initialComposer,
+        composerOptions
+    }
 
+    const [composerGlobalState, composerDispatch] = useInitComposerValue(initComposerConfig)
     return (
         // @ts-ignore
-        <ComposerContext.Provider value={composerOpts}>
-            {/* Composer */}
-            {children}
+        <ComposerContext.Provider value={composerGlobalState}>
+            <ComposerContextAction.Provider value={composerDispatch}>
+                {/* Composer */}
+                {children}
+            </ComposerContextAction.Provider>
         </ComposerContext.Provider>
     )
 }
@@ -109,12 +72,19 @@ const GlobalContextProvider = <TUser, TMessage> ({ children, initialMessages, gl
     )
 }
 
+export interface ComposerBoxProps<TComposerType, TMessageInputType> {
+    sendAction: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>['sendAction']
+}
+
 export interface PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType> {
     initialMessages?: Potato.Messages<TMessage>
     globalChatContext: Potato.GlobalChatContext<TUser>
-    composerConfig: Potato.Composer.GlobalContext<TComposerType, TMessageInputType>
-    sendAction: PotatoChatComposerProps<TComposerType, TMessageInputType>['sendAction']
+    composerOptions: Potato.ComposerOption<TComposerType, TMessageInputType>
+    sendAction: ComposerBoxProps<TComposerType, TMessageInputType>['sendAction']
     initialComposer: TComposerType
+    messageComponent: MessageCanvasProps['children']
+    messageCanvasWrapper: (props: { children: React.ReactNode }) => JSX.Element
+    composerBox: (props: ComposerBoxProps<TComposerType, TMessageInputType>) => JSX.Element 
 }
 
 
@@ -122,16 +92,33 @@ export interface PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerTy
  * Provider to provide the chat ui with state to manage
  * chat context
  */
-export function PotatoChat <TUser, TMessage, TMessageInputType, TComposerType extends string> ({ initialMessages, globalChatContext, composerConfig: composerOptions, sendAction, initialComposer }: PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType>) {
+export function PotatoChat <TUser, TMessage, TMessageInputType, TComposerType extends string> ({ 
+    initialMessages, 
+    globalChatContext, 
+    composerOptions, 
+    sendAction, 
+    initialComposer, 
+    messageComponent: MessageComponent,
+    messageCanvasWrapper: MessageCanvasWrapper,
+    composerBox: ComposerBox
+}: PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType>) {
     // console.log("Initialized Globasl State: ", globalChatContext)
     return(
         <GlobalContextProvider
             initialMessages={initialMessages} 
             globalChatContext={globalChatContext}>
-            <MessageBoard />
-            <ComposerProvider composerConfig={composerOptions}>
-                <PotatoChatComposer
-                    initialComposer={initialComposer}
+            {/* Message Canvas Region */}
+            <MessageCanvasWrapper>
+                <MessageCanvas>
+                    {messageProps => <MessageComponent {...messageProps} />}
+                </MessageCanvas>
+            </MessageCanvasWrapper>
+
+            {/* Composer Box Region */}
+            <ComposerProvider 
+                initialComposer={initialComposer} 
+                composerOptions={composerOptions}>
+                <ComposerBox
                     sendAction={sendAction}/>
             </ComposerProvider>
         </GlobalContextProvider>

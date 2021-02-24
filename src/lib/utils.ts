@@ -1,4 +1,4 @@
-import { ComposerContext, GlobalContext, GlobalContextAction } from "./internals"
+import { ComposerContext, GlobalContext, ComposerContextAction, GlobalContextAction } from "./internals"
 
 import { useContextSelector } from 'use-context-selector'
 import { Potato } from "../../@types"
@@ -62,6 +62,23 @@ export function useComposerComponent<ComposerType>(composerType: ComposerType | 
 
     // for renditions
     return composer.component
+}
+
+
+export function useComposerType<TComposerType>(): [TComposerType, (composerType: TComposerType) => void]{
+    // const messages = useMessages(messages => messages[messageId as unknown as number])
+    const dispatch = useContextSelector(ComposerContextAction, state => state)
+    if (dispatch === undefined) {
+        throw new Error("Make sure you have this wrapped in <GlobalContextAction.Provider>")
+    }
+    
+    const composerType = useComposerContext(state => state.composerType) as TComposerType
+    const setComposerType = useCallback((composerType: TComposerType) => {
+        // const originDate = useContextSelector(GlobalContext, state => state[0].dateTime)
+        dispatch({ type: 'changeComposerType', composerType })
+    }, [dispatch])
+
+    return [composerType, setComposerType]
 }
 
 
@@ -130,7 +147,7 @@ export function useMessageUpdater<TMessageInputType>() {
     const dispatch = useContextSelector(GlobalContextAction, state => state)
 
     if (dispatch === undefined) {
-        throw new Error("Make sure you have this wrapped in <GlobalContext.Provider>")
+        throw new Error("Make sure you have this wrapped in <GlobalContextAction.Provider>")
     }
 
     return useCallback((message: Potato.Composer.NewMessage<TMessageInputType>) => {
@@ -140,11 +157,15 @@ export function useMessageUpdater<TMessageInputType>() {
 }
 
 
-export function useSendCallback<TComposerType, TMessageInputType>(input: TMessageInputType, composerType: TComposerType, sendAction: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>['sendAction'] ) {
+export function useSendCallback<TComposerType, TMessageInputType>(input: TMessageInputType, sendAction: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>['sendAction'] ) {
     // the message context is missing
     // const [, updateMessageList] = useAtom(updateMessages)
     const updateMessageList = useMessageUpdater<TMessageInputType>()
+    const composerType = useComposerContext(state => state.composerType) as TComposerType
     
+    // TODO: uncomment this: it seems that for every keystroke this callback is being rerendered
+    // console.log("ComposerType:", composerType)
+
     // onSend Method
     return useCallback(() => {
         const newMessage: Potato.Composer.NewMessage<TMessageInputType> = {
