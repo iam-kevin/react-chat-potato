@@ -1,7 +1,7 @@
 {
   "name": "react-chat-potato",
   "description": "Re-imagined complete chat UI for React",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "dist/index.js",
   "repository": "https://github.com/iam-kevin/react-chat-potato.git",
   "author": "iam-kevin",
