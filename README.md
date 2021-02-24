@@ -6,6 +6,16 @@ Only dependecies (hopefully) are:
   - [use-context-selector@1.3.7](https://github.com/dai-shi/use-context-selector)
   - [immer@8.0.1](https://github.com/immerjs/immer)
 
+## Get Started
+
+Currently without Typescript support, to use the package
+
+```bash
+yarn add react-chat-potato
+```
+
+And follow through the [Usage](#usage) section
+
 ## Underlying Concepts and Principles
 
 ### Concepts:
@@ -45,8 +55,10 @@ Principles:
 
 `./custom-components/index.js`
 ```tsx
-export function ImageComposer <TComposerType, TMessageInputType>({ composerType, sendAction }: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType> ) {
-    const [fileValue, setFile] = useState<string>("")
+import { useSendCallback } from 'react-chat-potato/dist/lib/utils';
+
+function ImageComposer ({ composerType, sendAction }) {
+    const [fileValue, setFile] = useState("")
 
     const onSend = useSendCallback(fileValue, composerType, sendAction)
     return (
@@ -61,8 +73,8 @@ export function ImageComposer <TComposerType, TMessageInputType>({ composerType,
 }
     
 
-export function TextComposer <TComposerType, TMessageInputType>({ composerType, sendAction }: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>) {
-    const [value, setValue] = useState<string>("")
+function TextComposer ({ composerType, sendAction }) {
+    const [value, setValue] = useState("")
     const onSend = useSendCallback(value, composerType, sendAction)
 
     return (
@@ -79,17 +91,10 @@ export function TextComposer <TComposerType, TMessageInputType>({ composerType, 
 
 `index.js`
 ```tsx
-import { Potato } from 'react-chat-potato/@types';
 import { PotatoChat } from 'react-chat-potato'
 import { ImageComposer, TextComposer } from './custom-components';
 
-
-interface User {
-    name: string
-    avatar?: string
-}
-
-const globalChatContext: Potato.GlobalChatContext<User> = {
+const globalChatContext = {
     dateTime: Date.now(),
     users: {
         'self': null,   // TODO: this should indicate that user can chat
@@ -102,7 +107,7 @@ const globalChatContext: Potato.GlobalChatContext<User> = {
     }
 }
 
-const messages: Potato.Messages<MessageInputType> = [
+const messages = [
     {
         input: "Hi here, how are you doing", 
         dateTimeDelta: 129122762,
@@ -118,30 +123,18 @@ const messages: Potato.Messages<MessageInputType> = [
 /**
  * Composer Component details
  */
-type ComposerType =
-    | 'text'
-    | 'image'
-
-type MessageInputType =
-    | string    // message type for text
-    | string    // message type for image
-
-
-const composerOptions: Potato.Composer.GlobalContext<ComposerType, MessageInputType> = {
+const composerOptions = {
     composerType: 'text', 
     composerOptions: {
-        'text': {
-            component: TextComposer,
-        },
-        'image': {
-            component: ImageComposer,
-        },
+        'text': { component: TextComposer },
+        'image': { component: ImageComposer },
     }
 }
 
 
+
 export default function ChatBox() {
-    const sendAction = async (input: Potato.Composer.NewMessage<MessageInputType>, composerType: ComposerType) => {
+    const sendAction = async (input, composerType) => {
         console.log("Send message:", input)
         console.log("ComposerType:", composerType)
 
