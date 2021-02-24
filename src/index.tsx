@@ -2,7 +2,7 @@ import React from 'react'
 import { Potato } from '../@types/index'
 
 import { ComposerContext, GlobalContext, ComposerContextAction, useGlobalValue, useInitComposerValue, GlobalContextAction } from './lib/internals/state'
-import { useMessages } from './lib/utils'
+import { useMessages } from './utils/chat'
 
 
 
