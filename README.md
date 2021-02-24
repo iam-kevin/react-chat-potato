@@ -36,8 +36,10 @@ Principles:
     
     
 - [ ] Using delta datetime _[on progress]_ (and having only one reference for time)
+- [ ] publish version `0.1.x` 
 - [ ] Wrapping with placeholder view component (not to pick sides btn RJS / RN)
 - [ ] Adding a default components package with theme
+- [ ] Support Typescript
 
 ## Usage
 
