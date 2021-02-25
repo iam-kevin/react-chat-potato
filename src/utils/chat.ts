@@ -84,7 +84,7 @@ export function useMessageUpdater<TMessageInputType>() {
 export function useSendCallback<TComposerType, TMessageInputType>(input: TMessageInputType, sendAction: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>['sendAction'] ) {
     // the message context is missing
     // const [, updateMessageList] = useAtom(updateMessages)
-    const updateMessageList = useMessageUpdater<TMessageInputType>()
+    const addToMessageList = useMessageUpdater<TMessageInputType>()
     const composerType = useComposerContext(state => state.composerType) as TComposerType
     
     // TODO: uncomment this: it seems that for every keystroke this callback is being rerendered
@@ -96,10 +96,6 @@ export function useSendCallback<TComposerType, TMessageInputType>(input: TMessag
             input,
             user: 'self'
         }
-        sendAction(newMessage, composerType)
-            .then(() => {
-                // updates the message list with a new message
-                updateMessageList(newMessage)
-            })
-    }, [input, composerType, sendAction, updateMessageList])
+        sendAction(newMessage, composerType, addToMessageList)
+    }, [input, composerType, sendAction, addToMessageList])
 }

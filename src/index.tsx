@@ -84,7 +84,7 @@ export interface PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerTy
     initialComposer: TComposerType
     messageComponent: MessageCanvasProps['children']
     messageCanvasWrapper: (props: { children: React.ReactNode }) => JSX.Element
-    composerBox: (props: ComposerBoxProps<TComposerType, TMessageInputType>) => JSX.Element 
+    composerBox: (props: ComposerBoxProps<TComposerType, TMessageInputType>) => JSX.Element
 }
 
 
@@ -100,7 +100,7 @@ export function PotatoChat <TUser, TMessage, TMessageInputType, TComposerType ex
     initialComposer, 
     messageComponent: MessageComponent,
     messageCanvasWrapper: MessageCanvasWrapper,
-    composerBox: ComposerBox
+    composerBox: ComposerBox,
 }: PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType>) {
     // console.log("Initialized Globasl State: ", globalChatContext)
     return(
