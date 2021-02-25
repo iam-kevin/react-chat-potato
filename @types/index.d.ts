@@ -87,7 +87,7 @@ export declare namespace Potato {
 
 
         export interface OptionComponentProps<TComposerType, TComposerInputType> {
-            sendAction: <T extends TComposerInputType> (input: Potato.Composer.NewMessage<T>, composerType: TComposerType, updateMessageList: (input: Potato.Composer.NewMessage<T>) => void) => Promise<void>,
+            sendAction: <T extends TComposerInputType> (input: Potato.Composer.NewMessage<T>, composerType: TComposerType) => Promise<void>,
         }
 
 

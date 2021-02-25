@@ -76,9 +76,7 @@ export interface ComposerBoxProps<TComposerType, TMessageInputType> {
     sendAction: Potato.Composer.OptionComponentProps<TComposerType, TMessageInputType>['sendAction']
 }
 
-export interface PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType> {
-    initialMessages?: Potato.Messages<TMessage>
-    globalChatContext: Potato.GlobalChatContext<TUser>
+export interface PotatoChatProps<TMessageInputType, TComposerType> {
     composerOptions: Potato.ComposerOption<TComposerType, TMessageInputType>
     sendAction: ComposerBoxProps<TComposerType, TMessageInputType>['sendAction']
     initialComposer: TComposerType
@@ -87,26 +85,37 @@ export interface PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerTy
     composerBox: (props: ComposerBoxProps<TComposerType, TMessageInputType>) => JSX.Element
 }
 
+interface PotatoChatProviderProps<TUser, TMessage> {
+    initialMessages?: Potato.Messages<TMessage>
+    globalChatContext: Potato.GlobalChatContext<TUser>
+    children: React.ReactNode
+}
+
+export function PotatoChatProvider<TUser, TMessage> ({ children, initialMessages, globalChatContext }: PotatoChatProviderProps<TUser, TMessage>) {
+    return (
+        <GlobalContextProvider
+            initialMessages={initialMessages} 
+            globalChatContext={globalChatContext}>
+                {children}
+        </GlobalContextProvider>
+    )
+}
 
 /**
  * Provider to provide the chat ui with state to manage
  * chat context
  */
-export function PotatoChat <TUser, TMessage, TMessageInputType, TComposerType extends string> ({ 
-    initialMessages, 
-    globalChatContext, 
+export function PotatoChat<TComposerType extends string, TMessageInputType> ({
     composerOptions, 
     sendAction, 
     initialComposer, 
     messageComponent: MessageComponent,
     messageCanvasWrapper: MessageCanvasWrapper,
     composerBox: ComposerBox,
-}: PotatoChatProps<TUser, TMessage, TMessageInputType, TComposerType>) {
+}: PotatoChatProps<TComposerType, TMessageInputType>) {
     // console.log("Initialized Globasl State: ", globalChatContext)
     return(
-        <GlobalContextProvider
-            initialMessages={initialMessages} 
-            globalChatContext={globalChatContext}>
+        <>
             {/* Message Canvas Region */}
             <MessageCanvasWrapper>
                 <MessageCanvas>
@@ -121,6 +130,6 @@ export function PotatoChat <TUser, TMessage, TMessageInputType, TComposerType ex
                 <ComposerBox
                     sendAction={sendAction}/>
             </ComposerProvider>
-        </GlobalContextProvider>
+        </>
     )
 }
