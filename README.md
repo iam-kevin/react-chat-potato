@@ -46,120 +46,16 @@ Principles:
     
     
 - [ ] Using delta datetime _[on progress]_ (and having only one reference for time)
-- [ ] publish version `0.1.x` 
-- [ ] Wrapping with placeholder view component (not to pick sides btn RJS / RN)
+- [x] publish version `0.1.x` (current `0.3.x`)
+- [x] Wrapping with placeholder view component (not to pick sides btn RJS / RN) 
 - [ ] Adding a default components package with theme
 - [ ] Support Typescript
 
-## Usage
+## Example Usage
 
-`./custom-components/index.js`
-```tsx
-import { useSendCallback } from 'react-chat-potato/dist/lib/utils';
+Here is an example project using `react-chat-potato`: 
 
-function ImageComposer ({ composerType, sendAction }) {
-    const [fileValue, setFile] = useState("")
-
-    const onSend = useSendCallback(fileValue, composerType, sendAction)
-    return (
-        <div>
-            <div>Send the image here</div>
-            <input type="file" value={fileValue} onChange={(e) => setFile(e.target.value)}/>
-            <button onClick={onSend} className="bg-green-400 px-4 py-2 rounded-sm">
-                Send Image
-            </button>
-        </div>
-    )
-}
-    
-
-function TextComposer ({ composerType, sendAction }) {
-    const [value, setValue] = useState("")
-    const onSend = useSendCallback(value, composerType, sendAction)
-
-    return (
-        <div className="w-full justify-start flex items-start gap-4">
-            <textarea className="border w-96" value={value} onChange={(e) => setValue(e.target.value)}/>
-            <button onClick={onSend} className="bg-green-700 px-4 py-2 rounded-sm">
-                Send
-            </button>
-        </div>
-    )
-}
-```
-<br />
-
-`index.js`
-```tsx
-import { PotatoChat } from 'react-chat-potato'
-import { ImageComposer, TextComposer } from './custom-components';
-
-const globalChatContext = {
-    dateTime: Date.now(),
-    users: {
-        'self': null,   // TODO: this should indicate that user can chat
-        'kevin': {
-            name: "Kevin James",
-        },
-        'brian': {
-            name: "Brian Gaspar"
-        }
-    }
-}
-
-const messages = [
-    {
-        input: "Hi here, how are you doing", 
-        dateTimeDelta: 129122762,
-        user: 'kevin'
-    },
-    { 
-        input: "Sent this message on Wednesday", 
-        dateTimeDelta: 215617315,
-        user: 'brian'
-    }
-]
-
-/**
- * Composer Component details
- */
-const composerOptions = {
-    composerType: 'text', 
-    composerOptions: {
-        'text': { component: TextComposer },
-        'image': { component: ImageComposer },
-    }
-}
-
-
-
-export default function ChatBox() {
-    const sendAction = async (input, composerType) => {
-        console.log("Send message:", input)
-        console.log("ComposerType:", composerType)
-
-        switch (composerType) {
-            case 'text': console.log(">> Text based message"); break;
-            case 'image': console.log(">> Image based message"); break;
-            default: console.log("DEFAULT MESSAGE TRANSFER")
-        }
-    }
-
-    return (
-        <PotatoChat 
-            initialComposer='image'
-            initialMessages={messages}
-            globalChatContext={globalChatContext}
-            composerConfig={composerOptions}
-            sendAction={sendAction} />
-    )
-}
-```
-
-### GIF
-
-![Demo GIF](resources/using-react-chat-potato.gif)
-
+- Demo: Chat Bubbles (https://github.com/mary-africa/chat-bubbles)
 
 ## License
 
