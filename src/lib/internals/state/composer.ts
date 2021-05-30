@@ -1,5 +1,5 @@
 import { createContext } from 'use-context-selector'
-import { Potato } from '../../../../@types/index'
+import { Potato } from '../../../../typings'
 import produce, { Draft } from 'immer'
 import { useReducer } from 'react'
 

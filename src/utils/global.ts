@@ -1,6 +1,6 @@
 import { useContextSelector } from "use-context-selector"
 import { Potato } from "../../typings"
-import { GlobalContext } from "../lib/internals"
+import { GlobalContext } from "../lib/internals/state"
 
 /**
  * 

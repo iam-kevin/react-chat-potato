@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { useContextSelector } from "use-context-selector"
 import { Potato } from "../../typings"
-import { ComposerContext, ComposerContextAction } from "../lib/internals"
+import { ComposerContext, ComposerContextAction } from "../lib/internals/state"
 
 /**
  * 

@@ -3,7 +3,7 @@
  * entire chat screen
  */
 
-import { Potato } from '../../../../@types/index'
+import { Potato } from '../../../../typings/index'
 import { createContext } from 'use-context-selector'
 import { useReducer } from 'react'
 import produce from 'immer'
