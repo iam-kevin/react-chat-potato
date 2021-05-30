@@ -2,15 +2,14 @@
   "name": "react-chat-potato",
   "description": "Re-imagined complete chat UI for React",
   "version": "0.3.0",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "repository": "https://github.com/iam-kevin/react-chat-potato.git",
   "author": "iam-kevin",
   "license": "MIT",
+  "typings": "./typings",
   "scripts": {
-    "css": "npx tailwindcss build ./src/css/index.css -o ./dist/css/index.css",
     "tsc": "tsc -p .",
-    "build": "yarn run css && yarn run tsc",
-    "prepublishOnly": "yarn build"
+    "build": "yarn run tsc"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

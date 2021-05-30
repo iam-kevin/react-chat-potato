@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { useContextSelector } from "use-context-selector"
-import { Potato } from "../../@types"
+import { Potato } from "../../typings"
 import { GlobalContextAction } from "../lib/internals"
 import { useComposerContext } from "./composer"
 import { useGlobalContext } from "./global"

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Potato } from '../@types/index'
+import { Potato } from '../typings/index'
 
 import { ComposerContext, GlobalContext, ComposerContextAction, useGlobalValue, useInitComposerValue, GlobalContextAction } from './lib/internals/state'
 import { useMessages } from './utils/chat'
