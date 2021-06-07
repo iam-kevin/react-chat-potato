@@ -9,7 +9,7 @@
   "typings": "./typings",
   "scripts": {
     "tsc": "tsc -p .",
-    "build": "yarn run tsc"
+    "build": "rm -rf dist && yarn run tsc"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
