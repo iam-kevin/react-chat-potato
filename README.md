@@ -45,20 +45,17 @@ Principles:
 - [x] **Enabling Customizable Composers**: You are able to build composer components depending on your use case. For instance: text area for text input, custom audio mic for audio input. See Usage example
     
     
-- [ ] Using delta datetime _[on progress]_ (and having only one reference for time)
 - [x] publish version `0.1.x` (current `0.3.x`)
 - [x] Wrapping with placeholder view component (not to pick sides btn RJS / RN) 
-- [ ] Adding a default components package with theme
-- [ ] Support Typescript
+- [x] Adding a default components package with theme
+- [x] Support TypeScript
+- [ ] Using delta datetime _[on progress]_ (and having only one reference for time)
 
-## Example Usage
+## Usage
 
-Here is an example project using `react-chat-potato`: 
-
-- Demo: Chat Bubbles (https://github.com/mary-africa/chat-bubbles)
+Check out the repo with template for chat interfaces created with `react-chat-potato`
+Templates: [https://github.com/iam-kevin/chat-potato-templates](https://github.com/iam-kevin/chat-potato-templates)
 
 ## License
 
-This project uses an [MIT License](LICENSE). So take it apart, build it. Do whatever you want with this project.
-
-But Contributions are welcomed
+MIT
