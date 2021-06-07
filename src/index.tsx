@@ -1,5 +1,5 @@
 import React from 'react'
-import { Potato } from '../typings/index'
+import { Potato } from '../typings'
 
 import { ComposerContext, GlobalContext, ComposerContextAction, useGlobalValue, useInitComposerValue, GlobalContextAction } from './lib/internals/state'
 import { useMessages } from './utils/chat'
@@ -19,7 +19,6 @@ function MessageCanvas ({ children }: MessageCanvasProps) {
         </>
     )
 }
-
 
 interface ComposerProviderProps<TComposerType, TMessageInputType> {
     initialComposer: TComposerType
@@ -83,8 +82,8 @@ export interface PotatoChatProps<TMessageInputType, TComposerType> {
     messageComponent: MessageCanvasProps['children']
     messageCanvasWrapper: (props: { children: React.ReactNode }) => JSX.Element
     composerBox: (props: ComposerBoxProps<TComposerType, TMessageInputType>) => JSX.Element
+    
 }
-
 interface PotatoChatProviderProps<TUser, TMessage> {
     initialMessages?: Potato.Messages<TMessage>
     globalChatContext: Potato.GlobalChatContext<TUser>

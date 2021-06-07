@@ -3,14 +3,14 @@
  * entire chat screen
  */
 
-import { Potato } from '../../../../typings/index'
+import { Potato } from '../../../../typings'
 import { createContext } from 'use-context-selector'
 import { useReducer } from 'react'
 import produce from 'immer'
 
 type ActionType = 'updateMessage'
 
-type GlobalDispatchAction<TMessageInputType> = { type: ActionType, message: Potato.Composer.NewMessage<TMessageInputType> }
+type GlobalDispatchAction<TMessageInputType> = { type: ActionType, message: Potato.Composer.NewMessage<any, TMessageInputType> }
 type MessageDispatch = <TMessageInputType> (action: GlobalDispatchAction<TMessageInputType>) => void
 
 export const GlobalContext = createContext<any>(undefined)

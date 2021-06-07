@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { useContextSelector } from "use-context-selector"
 import { Potato } from "../../typings"
-import { ComposerContext, ComposerContextAction } from "../lib/internals/state"
+import { ComposerContext, ComposerContextAction } from "../lib/internals"
 
 /**
  * 
@@ -51,7 +51,7 @@ export function useComposerType<TComposerType>(): [TComposerType, (composerType:
     // const messages = useMessages(messages => messages[messageId as unknown as number])
     const dispatch = useContextSelector(ComposerContextAction, state => state)
     if (dispatch === undefined) {
-        throw new Error("Make sure you have this wrapped in <GlobalContextAction.Provider>")
+        throw new Error("Make sure you have this wrapped in <ComposerContextAction.Provider>")
     }
     
     const composerType = useComposerContext(state => state.composerType) as TComposerType

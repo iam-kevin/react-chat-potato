@@ -96,8 +96,11 @@ export declare namespace Potato {
         }
 
 
-        interface NewMessage<T> {
-            input: T,
+        interface NewMessage<T, K> {
+            input: {
+                type: T,
+                data: K
+            },
             user: UserType,
             messageId?: MessageComponentProps['messageId']
         }
