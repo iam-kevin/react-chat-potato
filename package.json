@@ -1,7 +1,7 @@
 {
   "name": "react-chat-potato",
   "description": "Re-imagined complete chat UI for React",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "repository": "https://github.com/iam-kevin/react-chat-potato.git",
   "author": "iam-kevin",
@@ -21,10 +21,10 @@
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
     "postcss": "^8.2.6",
+    "scheduler": "^0.20.1",
     "tailwindcss": "^2.0.3",
     "typescript": "^4.1.5",
-    "web-vitals": "^1.1.0",
-    "scheduler": "^0.20.1"
+    "web-vitals": "^1.1.0"
   },
   "dependencies": {
     "immer": "^8.0.1",
