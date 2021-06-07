@@ -6,15 +6,9 @@ Only dependecies (hopefully) are:
   - [use-context-selector@1.3.7](https://github.com/dai-shi/use-context-selector)
   - [immer@8.0.1](https://github.com/immerjs/immer)
 
-## Get Started
-
-Currently without Typescript support, to use the package
-
 ```bash
 yarn add react-chat-potato
 ```
-
-And follow through the [Usage](#usage) section
 
 ## Underlying Concepts and Principles
 
